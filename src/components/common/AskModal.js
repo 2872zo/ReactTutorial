@@ -40,7 +40,7 @@ const StyledButton = styled(Button)`
 	}
 `;
 
-const AskModal = (
+const AskModal = ({
 	visible,
 	title,
 	description,
@@ -48,7 +48,7 @@ const AskModal = (
 	cancelText = "취소",
 	onConfirm,
 	onCancel
-) => {
+}) => {
 	if (!visible) return null;
 	return (
 		<Fullscreen>
