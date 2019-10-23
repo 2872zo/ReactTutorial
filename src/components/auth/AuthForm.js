@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { Link } from "react-router-dom";
 import palette from "../../lib/styles/palette";
 import Button from "../common/Button";
@@ -63,6 +63,21 @@ const ErrorMessage = styled.div`
 	margin-top: 1rem;
 `;
 
+/**
+ * 에러를 보여줍니다
+ */
+const ValidationMessage = styled.div`
+	color: green;
+	text-align: center;
+	font-size: 0.875rem;
+	margin-top: 1rem;
+	${props =>
+		props.fail &&
+		css`
+			color: red;
+		`}
+`;
+
 const AuthForm = ({ type, form, onChange, onSubmit, error }) => {
 	const text = textMap[type];
 	return (
@@ -70,12 +85,29 @@ const AuthForm = ({ type, form, onChange, onSubmit, error }) => {
 			<h3>{text}</h3>
 			<form onSubmit={onSubmit}>
 				<StyledInput
-					autoComplete="username"
-					name="username"
+					autoComplete="userId"
+					name="userId"
 					placeholder="아이디"
 					onChange={onChange}
-					value={form.username}
+					value={form.userId}
 				/>
+				{type === "register" && (
+					<>
+						{form.validationFlag !== null &&
+							(form.validationFlag ? (
+								<ValidationMessage>가능</ValidationMessage>
+							) : (
+								<ValidationMessage fail>불가능</ValidationMessage>
+							))}
+						<StyledInput
+							autoComplete="username"
+							name="username"
+							placeholder="이름"
+							onChange={onChange}
+							value={form.username}
+						/>
+					</>
+				)}
 				<StyledInput
 					autoComplete="new-password"
 					name="password"

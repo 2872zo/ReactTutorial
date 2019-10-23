@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { changeField, initializeForm, login } from "../../modules/auth";
@@ -7,6 +7,7 @@ import { check } from "../../modules/user";
 
 const LoginForm = ({ history }) => {
 	const dispatch = useDispatch();
+	const [error, setError] = useState(null);
 	const { form, auth, authError, user } = useSelector(({ auth, user }) => ({
 		form: auth.login,
 		auth: auth.auth,
@@ -28,8 +29,12 @@ const LoginForm = ({ history }) => {
 
 	const onSubmit = e => {
 		e.preventDefault();
-		const { username, password } = form;
-		dispatch(login({ username, password }));
+		const { userId, password } = form;
+		if ([userId, password].includes("")) {
+			setError("빈 칸을 모두 입력하세요.");
+			return;
+		}
+		dispatch(login({ userId, password }));
 	};
 
 	useEffect(() => {
@@ -38,6 +43,12 @@ const LoginForm = ({ history }) => {
 
 	useEffect(() => {
 		if (authError) {
+			// 로그인 아이디, 비밀번호 틀릴 시
+			if (authError.response.status === 401) {
+				setError("아이디, 비밀번호를 확인하세요");
+				return;
+			}
+			setError("알 수 없는 오류 발생. 오류코드 : " + authError.response.status);
 			console.log("오류발생");
 			console.log(authError);
 			return;
@@ -65,6 +76,7 @@ const LoginForm = ({ history }) => {
 			form={form}
 			onChange={onChange}
 			onSubmit={onSubmit}
+			error={error}
 		/>
 	);
 };

@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { changeField, initializeForm, register } from "../../modules/auth";
+import {
+	changeField,
+	initializeForm,
+	register,
+	userValidationCheck
+} from "../../modules/auth";
 import AuthForm from "../../components/auth/AuthForm";
 import { check } from "../../modules/user";
 import { withRouter } from "react-router-dom";
@@ -25,12 +30,15 @@ const RegisterForm = ({ history }) => {
 				value
 			})
 		);
+		if (name === "userId") {
+			dispatch(userValidationCheck({ userId: value }));
+		}
 	};
 
 	const onSubmit = e => {
 		e.preventDefault();
-		const { username, password, passwordConfirm } = form;
-		if ([username, password, passwordConfirm].includes("")) {
+		const { userId, username, password, passwordConfirm } = form;
+		if ([userId, username, password, passwordConfirm].includes("")) {
 			setError("빈 칸을 모두 입력하세요.");
 			return;
 		}
@@ -42,7 +50,7 @@ const RegisterForm = ({ history }) => {
 			);
 			return;
 		}
-		dispatch(register({ username, password }));
+		dispatch(register({ userId, username, password }));
 	};
 
 	useEffect(() => {

@@ -23,40 +23,61 @@ const [LOGIN, LOGIN_SUCCESS, LOGIN_FAILURE] = createRequestActionTypes(
 	"auth/LOGIN"
 );
 
+const [
+	USER_VALIDAION_CHECK,
+	USER_VALIDAION_CHECK_SUCCESS,
+	USER_VALIDAION_CHECK_FAILURE
+] = createRequestActionTypes("auth/USER_VALIDAION_CHECK");
+
 export const changeField = createAction(
 	CHANGE_FIELD,
 	({ form, key, value }) => ({
 		form, // register , login
-		key, // username, password, passwordConfirm
+		key, // userId, username, password, passwordConfirm
 		value // 실제 바꾸려는 값
 	})
 );
 export const initializeForm = createAction(INITIALIZE_FORM, form => form); // register / login
-export const register = createAction(REGISTER, ({ username, password }) => ({
-	username,
+export const register = createAction(
+	REGISTER,
+	({ userId, username, password }) => ({
+		userId,
+		username,
+		password
+	})
+);
+export const login = createAction(LOGIN, ({ userId, password }) => ({
+	userId,
 	password
 }));
-export const login = createAction(LOGIN, ({ username, password }) => ({
-	username,
-	password
-}));
+export const userValidationCheck = createAction(
+	USER_VALIDAION_CHECK,
+	({ userId }) => ({ userId })
+);
 
 // saga 생성
 const registerSaga = createRequestSaga(REGISTER, authAPI.register);
 const loginSaga = createRequestSaga(LOGIN, authAPI.login);
+const userValidationCheckSaga = createRequestSaga(
+	USER_VALIDAION_CHECK,
+	authAPI.userValidationCheck
+);
 export function* authSaga() {
 	yield takeLatest(REGISTER, registerSaga);
 	yield takeLatest(LOGIN, loginSaga);
+	yield takeLatest(USER_VALIDAION_CHECK, userValidationCheckSaga);
 }
 
 const initialState = {
 	register: {
+		userId: "",
 		username: "",
 		password: "",
-		passwordConfirm: ""
+		passwordConfirm: "",
+		validationFlag: null
 	},
 	login: {
-		username: "",
+		userId: "",
 		password: ""
 	},
 	auth: null,
@@ -93,6 +114,16 @@ const auth = handleActions(
 		}),
 		// 로그인 실패
 		[LOGIN_FAILURE]: (state, { payload: error }) => ({
+			...state,
+			authError: error
+		}),
+		// 아이디 중복 없음
+		[USER_VALIDAION_CHECK_SUCCESS]: (state, { payload: validationFlag }) => ({
+			...state,
+			register: { ...state.register, validationFlag: validationFlag }
+		}),
+		// 아이디 중복
+		[USER_VALIDAION_CHECK_FAILURE]: (state, { payload: error }) => ({
 			...state,
 			authError: error
 		})

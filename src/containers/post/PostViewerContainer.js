@@ -21,6 +21,7 @@ const PostViewerContainer = ({ match, history }) => {
 	);
 
 	useEffect(() => {
+		// 마운트될 때 api요청
 		dispatch(readPost(postId));
 		// 언마운트될 때 리덕스에서 포스트 데이터 없애기
 		return () => {
