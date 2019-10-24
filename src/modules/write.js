@@ -32,7 +32,7 @@ export const writePost = createAction(WRITE_POST, ({ title, body, tags }) => ({
 export const setOriginalPost = createAction(SET_ORIGINAL_POST, post => post);
 export const updatePost = createAction(
 	UPDATE_POST,
-	({ id, title, body, tags }) => ({ id, title, body, tags })
+	({ postNo, title, body, tags }) => ({ postNo, title, body, tags })
 );
 
 // saga 생성
@@ -50,7 +50,7 @@ const initialState = {
 	tags: [],
 	post: null,
 	postError: null,
-	originalPostId: null
+	originalPostNo: null
 };
 
 const write = handleActions(
@@ -81,7 +81,7 @@ const write = handleActions(
 			title: post.title,
 			body: post.body,
 			tags: post.tags,
-			originalPostId: post._id
+			originalPostNo: post.postNo
 		}),
 		[UPDATE_POST_SUCCESS]: (state, { payload: post }) => ({
 			...state,

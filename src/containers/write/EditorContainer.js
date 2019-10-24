@@ -14,7 +14,7 @@ const EditorContainer = () => {
 		dispatch
 	]);
 
-	//언마운트될때 wrtie 초기화시킴
+	//언마운트될때 write 초기화시킴
 	useEffect(() => {
 		return () => {
 			dispatch(initialize());

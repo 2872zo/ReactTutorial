@@ -63,9 +63,6 @@ const ErrorMessage = styled.div`
 	margin-top: 1rem;
 `;
 
-/**
- * 에러를 보여줍니다
- */
 const ValidationMessage = styled.div`
 	color: green;
 	text-align: center;

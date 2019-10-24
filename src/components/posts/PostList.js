@@ -43,11 +43,11 @@ const PostItemBlock = styled.div`
 `;
 
 const PostItem = ({ post }) => {
-	const { publishedDate, user, tags, title, body, _id } = post;
+	const { publishedDate, user, tags, title, body, postNo } = post;
 	return (
 		<PostItemBlock>
 			<h2>
-				<Link to={`/@${user.username}/${_id}`}>{title}</Link>
+				<Link to={`/posts/${postNo}`}>{title}</Link>
 			</h2>
 			<SubInfo
 				username={user.username}
@@ -77,7 +77,7 @@ const PostList = ({ posts, loading, error, showWriteButton }) => {
 			{!loading && posts && (
 				<div>
 					{posts.map(post => (
-						<PostItem post={post} key={post._id} />
+						<PostItem post={post} key={post.postNo} />
 					))}
 				</div>
 			)}
